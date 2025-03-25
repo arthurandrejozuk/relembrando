@@ -28,9 +28,9 @@ html, body, div, span, applet, object, iframe,
   body {
     line-height: 1;
      font-family: "Lexend", sans-serif;
-     background-color: #ffdfd8;
- 
-  }
+     background-image:linear-gradient(rgb(241, 231, 231), rgb(255, 255, 255));
+    height: 100vh;
+  } 
   ol, ul {
     list-style: none;
   }

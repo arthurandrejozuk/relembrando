@@ -4,10 +4,11 @@ import { useState } from "react";
 import styled from "styled-components";
 import {  motion } from 'framer-motion';
 
-const HeaderStyled = styled.header<{ $isTouched: boolean }>`
-    background-color: #F1E7E7;
+const HeaderStyled = styled(motion.header)<{ $isTouched: boolean }>`
+
     padding: 32px;
-    font-size: 40px;
+    padding-top: 40px;
+    font-size: 50px;
     color: #3c5a78;
     display: flex;
     align-items: center;
@@ -26,17 +27,30 @@ const HeaderStyled = styled.header<{ $isTouched: boolean }>`
     }
 `;
 
-export default function Header() {
+export default function Header({onClick} : {onClick: () => void}) {
     const [isTouched, setIsTouched] = useState(false);
 
     return (
         <HeaderStyled
             $isTouched={isTouched}
-            onTouchStart={() => setIsTouched(true)}
-          
+            onClick={() => setIsTouched(!isTouched)} 
         >
-            <motion.div whileTap={{scale:1.1}}>
-                <motion.p >Relembrando</motion.p>
+            <motion.div onClick={onClick} initial='hidden' animate='visible'
+                variants={{
+                    hidden: {
+                        scale: .8,
+                        opacity: 0
+                    },
+                    visible: {
+                        scale: 1,
+                        opacity: 1,
+                        transition: {
+                            delay: .1
+                        }
+                    },
+                }}
+                whileTap={{ scale: 1.1}}>
+                <motion.p >Lembrando</motion.p>
                 <motion.div initial='normal' animate='animate'
                 variants={{
                     normal: {
@@ -56,7 +70,7 @@ export default function Header() {
                         }
                     }
                 }}>
-                    <BsArrowDownSquareFill size={32}/>
+                    <BsArrowDownSquareFill size={40}/>
                 </motion.div>
             </motion.div>
         </HeaderStyled>
