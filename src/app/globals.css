@@ -28,9 +28,13 @@ html, body, div, span, applet, object, iframe,
   body {
     line-height: 1;
      font-family: "Lexend", sans-serif;
-     background-image:linear-gradient(rgb(241, 231, 231), rgb(255, 255, 255));
-    height: 100vh;
+    
+   
   } 
+  html{
+    background-image:linear-gradient(rgb(241, 231, 231), rgb(255, 255, 255));
+    background-repeat: no-repeat;
+  }
   ol, ul {
     list-style: none;
   }
@@ -46,5 +50,6 @@ html, body, div, span, applet, object, iframe,
     border-collapse: collapse;
     border-spacing: 0;
   }
+
 
   

@@ -18,6 +18,7 @@ const HeaderStyled = styled(motion.header)<{ $isTouched: boolean }>`
         font-family: ${({ $isTouched }) => 
             $isTouched ? '"Londrina Solid", sans-serif' : '"Londrina Sketch", sans-serif'};
         transition: font-family 500ms ease-in-out;
+       
     }
     div{
         display: flex;
@@ -27,13 +28,30 @@ const HeaderStyled = styled(motion.header)<{ $isTouched: boolean }>`
     }
 `;
 
+
+const Icon = styled(motion.div) <{ $onClick: boolean }>`
+    
+        .icon{
+            width: ${({ $onClick }) =>
+                $onClick ? '36px' : '42px'
+            };
+        transition: width 500ms ease-in-out; 
+    }
+   
+
+`;
+
 export default function Header({onClick} : {onClick: () => void}) {
     const [isTouched, setIsTouched] = useState(false);
-
+    const [click, setClick] = useState(false);
     return (
         <HeaderStyled
+            
             $isTouched={isTouched}
-            onClick={() => setIsTouched(!isTouched)} 
+            onClick={() => {
+                setIsTouched(!isTouched)
+                setClick(!click)
+            }} 
         >
             <motion.div onClick={onClick} initial='hidden' animate='visible'
                 variants={{
@@ -51,7 +69,7 @@ export default function Header({onClick} : {onClick: () => void}) {
                 }}
                 whileTap={{ scale: 1.1}}>
                 <motion.p >Lembrando</motion.p>
-                <motion.div initial='normal' animate='animate'
+                <Icon $onClick={click} initial='normal' animate='animate'
                 variants={{
                     normal: {
                         scale: 0.9,
@@ -70,8 +88,8 @@ export default function Header({onClick} : {onClick: () => void}) {
                         }
                     }
                 }}>
-                    <BsArrowDownSquareFill size={40}/>
-                </motion.div>
+                    <BsArrowDownSquareFill className="icon"/>
+                </Icon>
             </motion.div>
         </HeaderStyled>
     );
