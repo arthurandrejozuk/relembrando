@@ -32,7 +32,7 @@ const CardStyled = styled(motion.div)`
             text-underline-offset:4px;
         }
         p{
-            font-size: 28px;
+            font-size: 24px;
             padding-left: 12px;
         }
     }
@@ -42,7 +42,6 @@ const CardStyled = styled(motion.div)`
 const DivImageStyle = styled(motion.div)`
     
     width: 100%;
-    
     img{
         width: 100%;
         height: auto;
@@ -60,7 +59,7 @@ export default function Memories({ titulo, texto }: { titulo: string, texto: str
     return (
         <CardStyled
             onClick={() => setMore(!more)}
-            exit={{ opacity: 0, scale: 1, x: -100 }}
+            exit={{ opacity: 0,  x: -200, transition: { duration: 0.5 } }}
             variants={{
                         hidden: {
                             scale: 1,
@@ -78,14 +77,19 @@ export default function Memories({ titulo, texto }: { titulo: string, texto: str
                             <Image alt="" src={Imagem} width="170" height="170" />
                         </DivImageStyle>
                         <div>
-                            <h1>
+                            <motion.h1 key={more ? "truncated" : "full"} initial={{textShadow: '0px'}}  animate={{textShadow: '1px 1px #ffffff'}} >
                                 {titulo}
-                            </h1>
-                                <AnimatePresence initial={more}>
-                                     <motion.p exit={{ opacity: 0 }}>
-                                        {more ? `${texto.slice(0,30)}...` :  texto} 
-                                    </motion.p>
-                                </AnimatePresence>
+                            </motion.h1>
+                              <AnimatePresence mode="wait">
+                                <motion.p
+                                    key={more ? "truncated" : "full"}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 1, transition: { duration: 0.1 } }}
+                                >
+                                    {more ? `${texto.slice(0, 30)}...` : texto}
+                                </motion.p>
+                            </AnimatePresence>
                         </div>
                     </CardStyled>
     )

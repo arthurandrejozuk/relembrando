@@ -6,7 +6,11 @@ import styled from "styled-components"
 const CardStyled = styled(motion.div)`
 
     padding-bottom: 40px;
-   
+   div{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+   }
 
 `
 
@@ -14,13 +18,20 @@ const CardStyled = styled(motion.div)`
 export default function Card({ ativos }:{ativos: boolean}) {
 
         return (
-            <AnimatePresence>
-                <CardStyled>
+            <CardStyled>
+                <AnimatePresence>
                     {ativos ?
-                        <Memories titulo="Roda gigante" texto="Lembrando... Há muita coisa para lembrar. Testando colocar um textão aqui, uhuuuuuuuuuuuu! "/>
+                        <div>
+                            <Memories titulo="Roda gigante" texto="Lembrando... 
+                                Há muita coisa para lembrar. Testando colocar um textão aqui, uhuuuuuuuu!
+                            "/>
+                            {/* <Memories titulo="Roda gigante" texto="Lembrando... 
+                                Há muita coisa para lembrar. Testando colocar um textão aqui, uhuuuuuuuu!
+                            "/> */}
+                        </div>
                     : null}
-                </CardStyled>
-            </AnimatePresence>
+                </AnimatePresence>
+            </CardStyled>
         )
     }
    

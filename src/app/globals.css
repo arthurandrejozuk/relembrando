@@ -26,15 +26,19 @@ html, body, div, span, applet, object, iframe,
     display: block;
   }
   body {
-    line-height: 1;
-     font-family: "Lexend", sans-serif;
+      line-height: 1;
+      font-family: "Lexend", sans-serif;
     
-   
+      background-image:linear-gradient(rgb(241, 231, 231), rgb(231, 224, 224));
+      background-repeat: no-repeat;
+
+      background-position: center;
+      min-height: 100vh;
+      margin: 0;
   } 
-  html{
-    background-image:linear-gradient(rgb(241, 231, 231), rgb(255, 255, 255));
-    background-repeat: no-repeat;
-  }
+  
+    
+  
   ol, ul {
     list-style: none;
   }
