@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion"
-import Image from "next/image"
+import Image, { StaticImageData } from "next/image"
 import styled from "styled-components"
-import Imagem from "../../../public/images/roda-gigante.jpg";
-import { useState } from "react";
+import Batman from "../../../public/images/default.webp"
+import { useState } from "react"
 
 const CardStyled = styled(motion.div)`
     
@@ -14,6 +14,7 @@ const CardStyled = styled(motion.div)`
     margin-right: 10%;
     box-shadow: 8px 8px 10px #cdc2c2;
     border-radius: 12px;
+    margin-bottom: 20px;
     div{
         width: 100%;
         display: flex;
@@ -50,44 +51,58 @@ const DivImageStyle = styled(motion.div)`
     }
 
 `
+// const draw = {
+//     hidden: { pathLength: 0, opacity: 0 },
+//     visible: {
+//         pathLength: 1,
+//         opacity: 1,
+//         transition: { duration: 2, ease: "easeInOut" }
+//     }
+// }
 
-
-export default function Memories({ titulo, texto }: { titulo: string, texto: string }) {
+export default function Memories({ titulo, texto, imagem, custom }: { titulo: string, texto: string, imagem?: StaticImageData, custom: number }) {
     
     const [more, setMore] = useState(true)
 
     return (
         <CardStyled
+            custom={custom}
             onClick={() => setMore(!more)}
-            exit={{ opacity: 0,  x: -200, transition: { duration: 0.5 } }}
+            exit={{ opacity: 0, x: -200, transition: { duration: 0.5 } }}
+            style={{  }}
             variants={{
                         hidden: {
                             scale: 1,
                             opacity: 0.5,
-                            x: -100
+                            x: -100,
+                            transition: {
+                                delay: custom * 0.3 
+                            }
                         },
                         visible: {
                             opacity: 1,
                             scale: 1,  
-                            x: 0
+                            x: 0,
+                            transition: { delay: custom * 0.025 }
                         }
                     }}
                         initial="hidden" animate="visible">
                         <DivImageStyle>
-                            <Image alt="" src={Imagem} width="170" height="170" />
+                            <Image alt="" src={imagem ? imagem : Batman} width="170" height="170" />
                         </DivImageStyle>
-                        <div>
-                            <motion.h1 key={more ? "truncated" : "full"} initial={{textShadow: '0px'}}  animate={{textShadow: '1px 1px #ffffff'}} >
+                        <div onClick={() => setMore(!more)}>
+                            <motion.h1  key={more ? "truncated" : "full"} initial={{textShadow: '0px'}}  animate={{textShadow: '1px 1px #ffffff'}} >
                                 {titulo}
                             </motion.h1>
                               <AnimatePresence mode="wait">
                                 <motion.p
-                                    key={more ? "truncated" : "full"}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 1, transition: { duration: 0.1 } }}
+                                      key={more ? "truncated" : "full"}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.3 }}
                                 >
-                                    {more ? `${texto.slice(0, 30)}...` : texto}
+                                    {more ? texto.slice(0, 30) + "..." : texto}
                                 </motion.p>
                             </AnimatePresence>
                         </div>

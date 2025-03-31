@@ -19,20 +19,16 @@ const FooterStyled = styled(motion.div)`
 export default function Footer({active} : {active: boolean}) {
     return (
         <AnimatePresence>
-            <FooterStyled key={active ? "truncated" : "full"}
-                  initial={{ opacity: 1, y: 0 }} // Começa fora da tela
-                    animate={{
-                        opacity:  1,
-                        y: active ? 0 : 50, // Se active=true, fica fixo; se false, desliza um pouco para baixo
-                    }}
-                    exit={{
-                        opacity: 1,
-                        y: 0, // Quando sair, sobe para cima
-                    }}
-                    transition={{ duration: 0.5 }}
+            { active &&  <FooterStyled
+                key="footer"
+                initial={{ opacity: 0, y: 100 }} // Começa fora da tela
+                animate={{ opacity: 1, y: 0 }} // Entra suavemente
+                exit={{ opacity: 1, y: 100 }} // Sai suavemente
+                transition={{ duration: 0.5 }}
             >
             <h1>Feito por Arthur ;)</h1>
-            </FooterStyled>
+            </FooterStyled>}
+       
         </AnimatePresence>
     )
 }
