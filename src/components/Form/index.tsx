@@ -1,21 +1,21 @@
-import { motion } from "framer-motion"
-import styled from "styled-components"
+import { motion } from "framer-motion";
+import { useState } from "react";
+import styled from "styled-components";
+import Batman from "../../../public/images/default.webp";
+import Image from "next/image";
 
 const DivStyled = styled(motion.div)`
-
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        scroll-behavior: auto;
-
-`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    scroll-behavior: auto;
+`;
 
 const FormStyled = styled(motion.div)`
-    
-    h1{
-        font-size: 36px;
+    h1 {
+        font-size: 44px;
         padding-bottom: 20px;
         font-family: "Londrina Solid", sans-serif;
         color: #3c5a78;
@@ -27,64 +27,98 @@ const FormStyled = styled(motion.div)`
     align-content: center;
     justify-content: center;
     flex-wrap: wrap;
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding: 16px;
     position: absolute;
-    border-radius: 12px;
+    border-radius: 4px;
     text-align: center;
     width: 95%;
-    padding-right: 4px;
-    padding-left: 4px;
-    border: 2px solid #3c5a78;
-    label{
-        font-size: 24px;
+    
+    label {
+        font-size: 28px;
         color: #3c5a78;
     }
-    form{
+    
+    form {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         font-family: "Lexend", sans-serif;
-        width: 90%;
+        width: 95%;
         gap: 18px;
-       
-        input{
-             font-family: "Lexend", sans-serif;
+        
+        input, textarea {
+            font-family: "Lexend", sans-serif;
             border: none;
             border-radius: 4px;
             padding: 4px;
-            height: 20px;
-            font-weight: 20px;
-            width: 90%;
-            font-size: 20px;
-        }
-        textarea{
-          font-family: "Lexend", sans-serif;
-            height: 80px;
-            border: none;
-            font-size: 22px;
-            width: 90%;
+            font-size: 24px;
+            width: 95%;
         }
         
-    }
+        input {
+            height: 32px;
+        }
 
-`
+        input::placeholder, textarea::placeholder {
+            color: #46638057;
+        }
+
+        textarea {
+            height: 100px;
+            margin-bottom: 8px;
+        }
+    }
+    
+    button {
+        background-color: #3c5a78;
+        color: #f4f6f7;
+        width: 100%;
+        border: none;
+        padding: 12px;
+        font-size: 28px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+`;
 
 export default function Form() {
+    const [img, setImg] = useState<File | null>(null);
+    const [imgPreview, setImgPreview] = useState<string | null>(null);
+    const [titulo, setTitulo] = useState('');
+    const [descricao, setDescricao] = useState('');
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files ? event.target.files[0] : null;
+        if (file) {
+            setImg(file);
+            setImgPreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        console.log({ img, titulo, descricao });
+    };
+
     return (
-        <DivStyled initial='hidden' animate='visible' exit={{ y: -100, opacity:0 }} variants={{ hidden: { y: -1000 }, visible: { y: 0 } }}>
+        <DivStyled initial="hidden" animate="visible" exit={{ y: -100, opacity: 0 }} variants={{ hidden: { y: -1000 }, visible: { y: 0 } }}>
             <FormStyled>
-            <h1>Crie uma lembrança</h1>
-                <motion.form>
-                    <motion.label htmlFor='file'>Escolha uma imagem:</motion.label>
-                    <input type="file" accept="image/png, image/jpeg" />
-                    <motion.label>Dê um titulo para a lembrança:</motion.label>
-                    <input type="text" />
+                <h1>Crie uma lembrança</h1>
+                <motion.form onSubmit={handleSubmit}>
+                    <motion.label htmlFor="file">Escolha uma imagem:</motion.label>
+                    <input type="file" accept="image/png, image/jpeg" onChange={handleFileChange} />
+                    <Image src={imgPreview || Batman} width={120} height={120} alt="Preview da imagem" />
+
+                    <motion.label>Dê um título para a lembrança:</motion.label>
+                    <input value={titulo} onChange={(event) => setTitulo(event.target.value)} placeholder="Digite um título" type="text" />
+
                     <motion.label>Descreva a lembrança:</motion.label>
-                    <textarea  />
+                    <textarea value={descricao} onChange={(event) => setDescricao(event.target.value)} placeholder="Escreva uma descrição" />
+
+                    <button type="submit">Criar lembrança</button>
                 </motion.form>
             </FormStyled>
         </DivStyled>
-    )
+    );
 }

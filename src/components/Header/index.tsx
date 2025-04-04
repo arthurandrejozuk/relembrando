@@ -8,7 +8,7 @@ const HeaderStyled = styled(motion.header)<{ $isTouched: boolean }>`
 
     padding: 32px;
     padding-top: 40px;
-    font-size: 50px;
+    font-size: 56px;
     color: #3c5a78;
     display: flex;
     align-items: center;

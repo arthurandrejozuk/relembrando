@@ -23,7 +23,7 @@ export default function ButtonPlus({onClick, abreOuFecha}:{onClick: MouseEventHa
         <>
             <ButtonPlusStyled onClick={onClick}  drag dragConstraints={{ bottom: 0, top: 0, left: 0, right: 250 }} whileTap={{ scale: 1.1, opacity: 0.9 }}>
                 <motion.div  animate={{ rotate: abreOuFecha ? 45 : 0 }} >
-                    <FaPlus color="white" size={32}/>
+                    <FaPlus color="white" size={40}/>
                 </motion.div>
             </ButtonPlusStyled>
         </>

@@ -10,8 +10,8 @@ const CardStyled = styled(motion.div)`
     align-items: center;
     flex-direction: column;
     background-color: #eee4e4;    
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
     box-shadow: 8px 8px 10px #cdc2c2;
     border-radius: 12px;
     margin-bottom: 20px;
@@ -35,6 +35,7 @@ const CardStyled = styled(motion.div)`
         p{
             font-size: 24px;
             padding-left: 12px;
+            padding-right: 12px;
         }
     }
 
@@ -60,12 +61,13 @@ const DivImageStyle = styled(motion.div)`
 //     }
 // }
 
-export default function Memories({ titulo, texto, imagem, custom }: { titulo: string, texto: string, imagem?: StaticImageData, custom: number }) {
+export default function Memories({ id, titulo, texto, imagem, custom }: { id?: number, titulo: string, texto: string, imagem?: StaticImageData | string, custom: number }) {
     
     const [more, setMore] = useState(true)
 
     return (
         <CardStyled
+            id={String(id)}
             custom={custom}
             onClick={() => setMore(!more)}
             exit={{ opacity: 0, x: -200, transition: { duration: 0.5 } }}
