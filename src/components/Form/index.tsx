@@ -3,6 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import Batman from "../../../public/images/default.webp";
 import Image from "next/image";
+import { uploadImagem } from "@/app/api/lembrancas/route";
 
 const DivStyled = styled(motion.div)`
     width: 100%;
@@ -82,6 +83,8 @@ const FormStyled = styled(motion.div)`
     }
 `;
 
+
+
 export default function Form() {
     const [img, setImg] = useState<File | null>(null);
     const [imgPreview, setImgPreview] = useState<string | null>(null);
@@ -94,12 +97,36 @@ export default function Form() {
             setImg(file);
             setImgPreview(URL.createObjectURL(file));
         }
+        console.log(img)
+        console.log(imgPreview)
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        console.log({ img, titulo, descricao });
-    };
+
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+
+  try {
+    // 1. Faz upload da imagem
+    const imagemUrl = await uploadImagem(img);
+
+    // 2. Envia para a API com a URL da imagem
+    const dados = { titulo, descricao, imagem: imagemUrl };
+
+    await fetch('http://localhost:3000/api/lembrancas', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dados),
+    });
+
+    console.log("Enviado com sucesso");
+
+  } catch (error) {
+    console.error("Erro ao enviar:", error);
+  }
+};
 
     return (
         <DivStyled initial="hidden" animate="visible" exit={{ y: -100, opacity: 0 }} variants={{ hidden: { y: -1000 }, visible: { y: 0 } }}>

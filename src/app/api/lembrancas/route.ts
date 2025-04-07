@@ -19,16 +19,47 @@ export async function GET() {
   });
 }
 
-// export async function POST(request: Request) {
-//   // Parse the request body
-//   const body = await request.json();
-//   const { titulo } = body;
- 
-//   // e.g. Insert new user into your DB
-//   const novaLembranca = { id: Date.now(), titulo };
- 
-//   return new Response(JSON.stringify(novaLembranca), {
-//     status: 201,
-//     headers: { 'Content-Type': 'application/json' }
-//   });
-// }
+
+  export const uploadImagem = async (file: File | null) => {
+    const fileName = `${Date.now()}_${file?.name}`;
+    
+    const { data, error } = await supabase.storage
+        .from('lembrancas') // Nome do seu bucket no Supabase Storage
+        .upload(fileName, file!);
+
+    if (error) {
+        throw new Error("Erro ao enviar imagem: " + error.message);
+    }
+
+    const { data: publicUrlData } = supabase
+        .storage
+        .from('lembrancas')
+        .getPublicUrl(fileName);
+
+    return publicUrlData.publicUrl;
+    };
+
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  const { titulo, imagem, descricao } = body;
+
+
+
+  const { data, error } = await supabase
+    .from('lembrancas')
+    .insert({ imagem, titulo, descricao })
+    .select('*');
+
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  return new Response(JSON.stringify(data), {
+    status: 201,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
