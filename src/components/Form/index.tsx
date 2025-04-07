@@ -3,7 +3,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import Batman from "../../../public/images/default.webp";
 import Image from "next/image";
-import { uploadImagem } from "@/app/api/lembrancas/route";
+import { uploadImagem } from "../../../infra/function/uploadImage";
+
 
 const DivStyled = styled(motion.div)`
     width: 100%;

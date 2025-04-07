@@ -20,24 +20,7 @@ export async function GET() {
 }
 
 
-  export const uploadImagem = async (file: File | null) => {
-    const fileName = `${Date.now()}_${file?.name}`;
-    
-    const { error } = await supabase.storage
-        .from('lembrancas') // Nome do seu bucket no Supabase Storage
-        .upload(fileName, file!);
-
-    if (error) {
-        throw new Error("Erro ao enviar imagem: " + error.message);
-    }
-
-    const { data: publicUrlData } = supabase
-        .storage
-        .from('lembrancas')
-        .getPublicUrl(fileName);
-
-    return publicUrlData.publicUrl;
-    };
+ 
 
 
 export async function POST(request: Request) {
