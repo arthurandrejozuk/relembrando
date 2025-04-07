@@ -23,7 +23,7 @@ export async function GET() {
   export const uploadImagem = async (file: File | null) => {
     const fileName = `${Date.now()}_${file?.name}`;
     
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
         .from('lembrancas') // Nome do seu bucket no Supabase Storage
         .upload(fileName, file!);
 
