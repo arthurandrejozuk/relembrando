@@ -118,7 +118,7 @@ export default function Form() {
         
         
         
-        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000/' }`, {
+        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000/' }/api/lembrancas `, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -128,10 +128,11 @@ export default function Form() {
 
             console.log("Enviado com sucesso");
 
-            router.push('/')
+            
         } catch (error) {
             console.error("Erro ao enviar:", error);
-        }
+    }
+        router.push('/')
     };
 
     return (
