@@ -5,19 +5,22 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
-type Params = {
-  params: {
-    id: string
-  }
-}
+
 
 export async function GET( request: Request,
-  { params }: Params) {
+    { params }: { params: { id: string } }) {
 
     const id = params.id;
 
-   const{ data, error } = await supabase.from('lembrancas').select('*').eq('id', Number(id))
+   const{ data, error } = await supabase.from('lembrancas').select('*').eq('id', id).single(); 
 
+  if (!id) {
+  return new Response(JSON.stringify({ error: 'ID não fornecido' }), {
+    status: 400,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+  
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
