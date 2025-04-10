@@ -1,14 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
+import { NextRequest } from 'next/server'
+
+// se quiser declarar tipagem manual:
+type Context = {
+  params: {
+    id: string
+  }
+}
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-export async function GET(
-  request: Request,
-  context: { params: { id: string } } // <- Isso aqui está certo
-) {
+export async function GET(request: NextRequest, context: Context) {
   const { id } = context.params
 
   const { data, error } = await supabase
@@ -29,18 +34,8 @@ export async function GET(
   })
 }
 
-export async function DELETE(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, context: Context) {
   const { id } = context.params
-
-  if (!id) {
-    return new Response(JSON.stringify({ error: 'ID não fornecido' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
 
   const { error } = await supabase
     .from('lembrancas')
