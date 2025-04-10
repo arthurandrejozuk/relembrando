@@ -1,20 +1,18 @@
 import { createClient } from '@supabase/supabase-js'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-// se quiser declarar tipagem manual:
-type Context = {
-  params: {
-    id: string
-  }
-}
-
+// Client do Supabase
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-export async function GET(request: NextRequest, context: Context) {
-  const { id } = context.params
+// GET: Buscar lembrança por ID
+export async function GET(
+  request: NextRequest,
+  context: { params: Record<string, string> }
+) {
+  const id = context.params.id
 
   const { data, error } = await supabase
     .from('lembrancas')
@@ -22,20 +20,18 @@ export async function GET(request: NextRequest, context: Context) {
     .eq('id', Number(id))
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return new Response(JSON.stringify(data), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  })
+  return NextResponse.json(data, { status: 200 })
 }
 
-export async function DELETE(request: NextRequest, context: Context) {
-  const { id } = context.params
+// DELETE: Deletar lembrança por ID
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Record<string, string> }
+) {
+  const id = context.params.id
 
   const { error } = await supabase
     .from('lembrancas')
@@ -43,14 +39,8 @@ export async function DELETE(request: NextRequest, context: Context) {
     .eq('id', Number(id))
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return new Response(JSON.stringify({ message: 'Deletado com sucesso' }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  })
+  return NextResponse.json({ message: 'Deletado com sucesso' }, { status: 200 })
 }
