@@ -1,17 +1,15 @@
-import { createClient } from '@supabase/supabase-js';
-import { NextRequest } from 'next/server';
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+)
 
-// GET /api/lembrancas/[id]
 export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = context.params.id;
+  const id = (await params).id
 
   if (!id) {
     return new Response(JSON.stringify({ error: 'ID não fornecido' }), {
@@ -24,11 +22,18 @@ export async function GET(
     .from('lembrancas')
     .select('*')
     .eq('id', id)
-    .single();
+    .maybeSingle();
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  if (!data) {
+    return new Response(JSON.stringify({ error: 'Lembrança não encontrada' }), {
+      status: 404,
       headers: { 'Content-Type': 'application/json' },
     });
   }
@@ -41,10 +46,10 @@ export async function GET(
 
 // DELETE /api/lembrancas/[id]
 export async function DELETE(
-  request: NextRequest,
-  context: { params: { id: string } }
+  request: Request,
+   { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = context.params.id;
+ const id = (await params).id
 
   if (!id) {
     return new Response(JSON.stringify({ error: 'ID não fornecido' }), {
@@ -56,7 +61,7 @@ export async function DELETE(
   const { error } = await supabase
     .from('lembrancas')
     .delete()
-    .eq('id', id);
+    .eq('id', Number(id));
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {

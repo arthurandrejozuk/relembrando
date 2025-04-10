@@ -1,5 +1,5 @@
 export interface ILembrancas {
-    id: number,
+    id: string,
     imagem: string,
     titulo: string,
     descricao: string

@@ -47,7 +47,7 @@ export default function Card({ ativos }:{ativos: boolean}) {
                             {data.map((lembranca:ILembrancas) => (
                                 <Memories
                                     key={lembranca.id}
-                                    id={lembranca.id}
+                                    id={Number(lembranca.id)}
                                     imagem={lembranca.imagem}
                                     titulo={lembranca.titulo}
                                     texto={lembranca.descricao} custom={0}                                />
