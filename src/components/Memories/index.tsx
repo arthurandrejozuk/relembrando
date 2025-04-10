@@ -102,7 +102,7 @@ export default function Memories({ id, titulo, texto, imagem, custom }: { id?: n
                         initial="hidden" animate="visible">
                         <DivImageStyle>
                             <IoClose onClick={ async () => {
-                                fetch(`http://localhost:3000/api/lembrancas/${id}`, {
+                                fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000/' }`, {
                                     method: "DELETE"
                                     
                                 })

@@ -116,9 +116,9 @@ export default function Form() {
     // 2. Envia para a API com a URL da imagem
         const dados = { titulo, descricao, imagem: imagemUrl }; 
         
-        //${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000/' }
+    
         
-        await fetch(`http:/localhost:3000/api/lembrancas`, {
+        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000/' }`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

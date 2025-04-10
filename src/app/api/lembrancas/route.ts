@@ -44,28 +44,28 @@ export async function POST(request: Request) {
   })
 }
 
-export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const id = searchParams.get('id')
+// export async function DELETE(request: Request) {
+//   const { searchParams } = new URL(request.url)
+//   const id = searchParams.get('id')
 
-  if (!id) {
-    return new Response(JSON.stringify({ error: 'ID não fornecido' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
+//   if (!id) {
+//     return new Response(JSON.stringify({ error: 'ID não fornecido' }), {
+//       status: 400,
+//       headers: { 'Content-Type': 'application/json' },
+//     })
+//   }
 
-  const { error } = await supabase.from('lembrancas').delete().eq('id', Number(id))
+//   const { error } = await supabase.from('lembrancas').delete().eq('id', Number(id))
 
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 402,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
+//   if (error) {
+//     return new Response(JSON.stringify({ error: error.message }), {
+//       status: 402,
+//       headers: { 'Content-Type': 'application/json' },
+//     })
+//   }
 
-  return new Response(JSON.stringify({ message: 'Deletado com sucesso' }), {
-    status: 202,
-    headers: { 'Content-Type': 'application/json' },
-  })
-}
+//   return new Response(JSON.stringify({ message: 'Deletado com sucesso' }), {
+//     status: 202,
+//     headers: { 'Content-Type': 'application/json' },
+//   })
+// }
