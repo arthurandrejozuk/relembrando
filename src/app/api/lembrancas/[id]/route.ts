@@ -7,24 +7,6 @@ const supabase = createClient(
 )
 
 
-export async function GET(request:NextRequest, { params }:{ params: {id : string} }) {
-
-    const id = params.id;
-
-   const{ data, error } = await supabase.from('lembrancas').select('*').eq('id', Number(id))
-
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
-  return new Response(JSON.stringify(data), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  })
-}
 
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
