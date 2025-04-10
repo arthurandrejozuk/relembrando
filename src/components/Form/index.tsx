@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Batman from "../../../public/images/default.webp";
 import Image from "next/image";
 import { uploadImagem } from "../../../infra/function/uploadImage";
+import { useRouter } from "next/navigation";
 
 
 const DivStyled = styled(motion.div)`
@@ -87,47 +88,51 @@ const FormStyled = styled(motion.div)`
 
 
 export default function Form() {
+    // useState que pega a imagem do tipo File
     const [img, setImg] = useState<File | null>(null);
     const [imgPreview, setImgPreview] = useState<string | null>(null);
     const [titulo, setTitulo] = useState('');
     const [descricao, setDescricao] = useState('');
+    const router = useRouter();
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        //Verifica se há um file e então pega o
         const file = event.target.files ? event.target.files[0] : null;
+        // caso exista, insere em img o file e transforma em string URL
         if (file) {
             setImg(file);
             setImgPreview(URL.createObjectURL(file));
         }
-        console.log(img)
-        console.log(imgPreview)
     };
 
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
-
-  try {
+    try {
     // 1. Faz upload da imagem
-    const imagemUrl = await uploadImagem(img);
+        const imagemUrl = await uploadImagem(img);
 
     // 2. Envia para a API com a URL da imagem
-    const dados = { titulo, descricao, imagem: imagemUrl };
+        const dados = { titulo, descricao, imagem: imagemUrl }; 
+        
+        //${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000/' }
+        
+        await fetch(`http:/localhost:3000/api/lembrancas`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dados),
+        });
 
-    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000/' }/api/lembrancas`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dados),
-    });
+            console.log("Enviado com sucesso");
 
-    console.log("Enviado com sucesso");
-
-  } catch (error) {
-    console.error("Erro ao enviar:", error);
-  }
-};
+            router.push('/')
+        } catch (error) {
+            console.error("Erro ao enviar:", error);
+        }
+    };
 
     return (
         <DivStyled initial="hidden" animate="visible" exit={{ y: -100, opacity: 0 }} variants={{ hidden: { y: -1000 }, visible: { y: 0 } }}>

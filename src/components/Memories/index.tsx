@@ -3,7 +3,8 @@ import Image, { StaticImageData } from "next/image"
 import styled from "styled-components"
 import Batman from "../../../public/images/default.webp"
 import { useState } from "react"
-
+import { IoClose } from "react-icons/io5";
+import { useRouter } from "next/navigation"
 const CardStyled = styled(motion.div)`
     
     display: flex;
@@ -15,6 +16,7 @@ const CardStyled = styled(motion.div)`
     box-shadow: 8px 8px 10px #cdc2c2;
     border-radius: 12px;
     margin-bottom: 20px;
+
     div{
         width: 100%;
         display: flex;
@@ -51,6 +53,13 @@ const DivImageStyle = styled(motion.div)`
         border-top-left-radius: 12px;
     }
 
+    .del_button{
+        z-index: 0;
+        position: absolute;
+        background-color: #3c5a78c4;
+        border-bottom-right-radius: 12px;
+    }
+
 `
 // const draw = {
 //     hidden: { pathLength: 0, opacity: 0 },
@@ -64,6 +73,8 @@ const DivImageStyle = styled(motion.div)`
 export default function Memories({ id, titulo, texto, imagem, custom }: { id?: number, titulo: string, texto: string, imagem?: StaticImageData | string, custom: number }) {
     
     const [more, setMore] = useState(true)
+
+    const router = useRouter();
 
     return (
         <CardStyled
@@ -90,6 +101,14 @@ export default function Memories({ id, titulo, texto, imagem, custom }: { id?: n
                     }}
                         initial="hidden" animate="visible">
                         <DivImageStyle>
+                            <IoClose onClick={ async () => {
+                                fetch(`http://localhost:3000/api/lembrancas/${id}`, {
+                                    method: "DELETE"
+                                    
+                                })
+                                router.push('/');
+
+                            }} size={44} color="#fff" className="del_button"/>
                             <Image alt="" src={imagem ? imagem : Batman} width="170" height="170" />
                         </DivImageStyle>
                         <div onClick={() => setMore(!more)}>

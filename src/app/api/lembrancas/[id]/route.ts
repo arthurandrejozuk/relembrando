@@ -1,13 +1,17 @@
 import { createClient } from '@supabase/supabase-js'
+import { NextRequest } from 'next/server'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-export async function GET() {
 
-   const{ data, error } = await supabase.from('lembrancas').select('*')
+export async function GET(request:NextRequest, { params }:{ params: {id : string} }) {
+
+    const id = params.id;
+
+   const{ data, error } = await supabase.from('lembrancas').select('*').eq('id', Number(id))
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
@@ -22,31 +26,9 @@ export async function GET() {
   })
 }
 
-export async function POST(request: Request) {
-  const body = await request.json()
-  const { titulo, imagem, descricao } = body
 
-  const { data, error } = await supabase
-    .from('lembrancas')
-    .insert({ imagem, titulo, descricao })
-    .select('*')
-
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
-  return new Response(JSON.stringify(data), {
-    status: 201,
-    headers: { 'Content-Type': 'application/json' },
-  })
-}
-
-export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const id = searchParams.get('id')
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const id = params.id
 
   if (!id) {
     return new Response(JSON.stringify({ error: 'ID não fornecido' }), {
@@ -59,13 +41,13 @@ export async function DELETE(request: Request) {
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 402,
+      status: 500,
       headers: { 'Content-Type': 'application/json' },
     })
   }
 
   return new Response(JSON.stringify({ message: 'Deletado com sucesso' }), {
-    status: 202,
+    status: 200,
     headers: { 'Content-Type': 'application/json' },
   })
 }

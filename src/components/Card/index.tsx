@@ -16,14 +16,14 @@ const CardStyled = styled(motion.div)`
 
 `
 
-
 export default function Card({ ativos }:{ativos: boolean}) {
 
     const [data, setData] = useState<ILembrancas[]>([])
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/lembrancas`);
+            // await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000/' }/api/lembrancas`);
+            const res = await fetch('http://localhost:3000/api/lembrancas');
             const data = await res.json();
             setData(data);
         };

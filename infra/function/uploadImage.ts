@@ -21,4 +21,4 @@ export const uploadImagem = async (file: File | null) => {
         .getPublicUrl(fileName);
 
     return publicUrlData.publicUrl;
-    };
+};
