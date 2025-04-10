@@ -6,7 +6,8 @@ const supabase = createClient(
 )
 
 
-export async function GET(request: Request, { params }:{ params: {id : string} }) {
+export async function GET( request: Request,
+  { params }: { params: { id: string } }) {
 
     const id = params.id;
 
