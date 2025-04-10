@@ -5,13 +5,16 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+export async function GET(
+  request: Request,
+  context: { params: { id: string } } // <- Isso aqui está certo
+) {
+  const { id } = context.params
 
-export async function GET( request: Request,
-  { params }: { params: { id: string } }) {
-
-    const id = params.id;
-
-   const{ data, error } = await supabase.from('lembrancas').select('*').eq('id', Number(id))
+  const { data, error } = await supabase
+    .from('lembrancas')
+    .select('*')
+    .eq('id', Number(id))
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
@@ -26,9 +29,11 @@ export async function GET( request: Request,
   })
 }
 
-
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  const id = params.id
+export async function DELETE(
+  request: Request,
+  context: { params: { id: string } }
+) {
+  const { id } = context.params
 
   if (!id) {
     return new Response(JSON.stringify({ error: 'ID não fornecido' }), {
@@ -37,7 +42,10 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     })
   }
 
-  const { error } = await supabase.from('lembrancas').delete().eq('id', Number(id))
+  const { error } = await supabase
+    .from('lembrancas')
+    .delete()
+    .eq('id', Number(id))
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
