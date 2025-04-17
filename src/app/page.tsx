@@ -11,21 +11,31 @@ import { useState } from "react";
 import styled from "styled-components";
 
 const HomeStyled = styled(motion.div)`
-  
+    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
   
 
 `
 
 export default function Home() {
 
-  const [active, setActive] = useState<boolean>(false);
-  const [openModal, setOpenModal] = useState<boolean>(false)
+  function success() {
+     setTimeout(() => {
+            setOpenModal(false)
+          }, 2000)
+      setRefresh(prev => !prev)
+  }
 
+  const [active, setActive] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
   return (
     <HomeStyled>
         <Header onClick={() => setActive(!active)} />
-        <Card ativos={active} />
-        <Modal open={openModal}><Form/></Modal>
+        <Card refresh={refresh} ativos={active} />
+        <Modal open={openModal}><Form onSuccess={success}/></Modal>
         <ButtonPlus abreOuFecha={openModal} onClick={() => setOpenModal(!openModal)} />
         <Footer active={active} />
     </HomeStyled>

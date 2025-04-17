@@ -4,8 +4,7 @@ import styled from "styled-components";
 import Batman from "../../../public/images/default.webp";
 import Image from "next/image";
 import { uploadImagem } from "../../../infra/function/uploadImage";
-import { useRouter } from "next/navigation";
-
+import Notification from "../Notification";
 
 const DivStyled = styled(motion.div)`
     width: 100%;
@@ -22,6 +21,7 @@ const FormStyled = styled(motion.div)`
         padding-bottom: 20px;
         font-family: "Londrina Solid", sans-serif;
         color: #3c5a78;
+        text-align: center;
     }
     flex-direction: column;
     scroll-behavior: auto;
@@ -33,12 +33,12 @@ const FormStyled = styled(motion.div)`
     padding: 16px;
     position: absolute;
     border-radius: 4px;
-    text-align: center;
-    width: 95%;
-    
+  
     label {
-        font-size: 28px;
+        font-size: 24px;
         color: #3c5a78;
+        position: absolute;
+        padding-left: 4px;
     }
     
     form {
@@ -58,9 +58,27 @@ const FormStyled = styled(motion.div)`
             font-size: 24px;
             width: 95%;
         }
-        
+        div{
+
+            width: 100%;
+
+        }
+        .input_image{
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            input{
+                padding-left: 36px;
+            }
+            label{
+                padding-bottom: 12px;
+            }
+        }
         input {
             height: 32px;
+            padding-top: 30px;
         }
 
         input::placeholder, textarea::placeholder {
@@ -70,6 +88,7 @@ const FormStyled = styled(motion.div)`
         textarea {
             height: 100px;
             margin-bottom: 8px;
+            padding-top: 30px;
         }
     }
     
@@ -87,17 +106,17 @@ const FormStyled = styled(motion.div)`
 
 
 
-export default function Form() {
+export default function Form({ onSuccess }: { onSuccess: () => void }) {
     // useState que pega a imagem do tipo File
     const [img, setImg] = useState<File | null>(null);
-    const [imgPreview, setImgPreview] = useState<string | null>(null);
+    const [imgPreview, setImgPreview] = useState<string | null>(Batman.src);
     const [titulo, setTitulo] = useState('');
     const [descricao, setDescricao] = useState('');
-    const router = useRouter();
+    const [status, setStatus] = useState<number>()
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         //Verifica se há um file e então pega o
-        const file = event.target.files ? event.target.files[0] : null;
+      const file = event.target.files?.[0];
         // caso exista, insere em img o file e transforma em string URL
         if (file) {
             setImg(file);
@@ -112,45 +131,56 @@ export default function Form() {
     try {
     // 1. Faz upload da imagem
         const imagemUrl = await uploadImagem(img);
-
     // 2. Envia para a API com a URL da imagem
         const dados = { titulo, descricao, imagem: imagemUrl }; 
         
-        
-        
-        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000/' }/api/lembrancas `, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000' }/api/lembrancas `, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(dados),
         });
+        
+        setStatus(response.status);
+    
+        if (response.ok) {
+            onSuccess(); // 👈 dispara o reload no componente pai
+            setTitulo('');
+            setDescricao('');
+            setImg(null);
+            setImgPreview(null);
+        }       
+        
 
-            console.log("Enviado com sucesso");
-
-            
         } catch (error) {
             console.error("Erro ao enviar:", error);
     }
-        router.push('/')
+
     };
 
     return (
-        <DivStyled initial="hidden" animate="visible" exit={{ y: -100, opacity: 0 }} variants={{ hidden: { y: -1000 }, visible: { y: 0 } }}>
+        <DivStyled  initial="hidden" animate="visible" exit={{ y: -100, opacity: 0 }} variants={{ hidden: { y: -1000 }, visible: { y: 0 } }}>
             <FormStyled>
                 <h1>Crie uma lembrança</h1>
                 <motion.form onSubmit={handleSubmit}>
-                    <motion.label htmlFor="file">Escolha uma imagem:</motion.label>
-                    <input type="file" accept="image/png, image/jpeg" onChange={handleFileChange} />
-                    <Image src={imgPreview || Batman} width={120} height={120} alt="Preview da imagem" />
-
-                    <motion.label>Dê um título para a lembrança:</motion.label>
-                    <input value={titulo} onChange={(event) => setTitulo(event.target.value)} placeholder="Digite um título" type="text" />
-
-                    <motion.label>Descreva a lembrança:</motion.label>
-                    <textarea value={descricao} onChange={(event) => setDescricao(event.target.value)} placeholder="Escreva uma descrição" />
+                    <div className="input_image">
+                        <motion.label htmlFor="file">Escolha uma imagem:</motion.label>
+                        <input type="file" accept="image/png, image/jpeg, image/webp" onChange={handleFileChange} />
+                         <p>Imagem padrão</p>
+                        <Image src={imgPreview || Batman} width={120} height={120} alt="Preview da imagem" />
+                    </div>
+                    <div>
+                        <motion.label>Dê um título:</motion.label>
+                        <input value={titulo} onChange={(event) => setTitulo(event.target.value)} placeholder="Digite um título" type="text" />
+                    </div>
+                    <div>
+                        <motion.label>Descreva a lembrança:</motion.label>
+                        <textarea value={descricao} onChange={(event) => setDescricao(event.target.value)} placeholder="Escreva uma descrição" />
+                    </div>
 
                     <button type="submit">Criar lembrança</button>
+                    {status ? <Notification status={status}/> : ''}
                 </motion.form>
             </FormStyled>
         </DivStyled>

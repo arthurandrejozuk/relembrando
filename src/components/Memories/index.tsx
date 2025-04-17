@@ -1,10 +1,12 @@
+'use client'
+
 import { AnimatePresence, motion } from "framer-motion"
 import Image, { StaticImageData } from "next/image"
 import styled from "styled-components"
 import Batman from "../../../public/images/default.webp"
-import { useState } from "react"
+import { MouseEventHandler, useState } from "react"
 import { IoClose } from "react-icons/io5";
-import { useRouter } from "next/navigation"
+
 const CardStyled = styled(motion.div)`
     
     display: flex;
@@ -70,11 +72,9 @@ const DivImageStyle = styled(motion.div)`
 //     }
 // }
 
-export default function Memories({ id, titulo, texto, imagem, custom }: { id?: number, titulo: string, texto: string, imagem?: StaticImageData | string, custom: number }) {
+export default function Memories({ id, titulo, texto, imagem, custom, deletando }: { id: number, titulo: string, texto: string, imagem?: StaticImageData | string, custom: number, deletando: (id:number) => Promise<void> | MouseEventHandler<SVGElement> | undefined }) {
     
     const [more, setMore] = useState(true)
-
-    const router = useRouter();
 
     return (
         <CardStyled
@@ -101,14 +101,8 @@ export default function Memories({ id, titulo, texto, imagem, custom }: { id?: n
                     }}
                         initial="hidden" animate="visible">
                         <DivImageStyle>
-                            <IoClose onClick={ async () => {
-                                fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?  process.env.NEXT_PUBLIC_BASE_URL : `http://localhost:3000` }/api/lembrancas/${id}`, {
-                                    method: "DELETE"
-                                })
-                                router.push('/');
-
-                            }} size={44} color="#fff" className="del_button"/>
-                            <Image alt="" src={imagem ? imagem : Batman} width="170" height="170" />
+                            <IoClose onClick={() => deletando(id)} size={44} color="#fff" className="del_button"/>
+                            <Image loading="lazy" alt="" src={imagem ? imagem : Batman} width="170" height="170" />
                         </DivImageStyle>
                         <div onClick={() => setMore(!more)}>
                             <motion.h1  key={more ? "truncated" : "full"} initial={{textShadow: '0px'}}  animate={{textShadow: '1px 1px #ffffff'}} >

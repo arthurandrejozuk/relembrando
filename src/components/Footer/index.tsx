@@ -4,7 +4,7 @@ import styled from "styled-components"
 const FooterStyled = styled(motion.div)`
     
 
-    z-index: 2;
+    z-index: -2;
     background-color: transparent;
     padding: 16px;
     display: flex;

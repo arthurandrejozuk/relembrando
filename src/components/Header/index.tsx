@@ -1,10 +1,10 @@
-'use client'
+
 import { BsArrowDownSquareFill } from "react-icons/bs";
 import { useState } from "react";
 import styled from "styled-components";
 import {  motion } from 'framer-motion';
 
-const HeaderStyled = styled(motion.header)<{ $isTouched: boolean }>`
+const HeaderStyled = styled(motion.div)<{ $isTouched: boolean }>`
 
     padding: 32px;
     padding-top: 40px;
@@ -46,7 +46,6 @@ export default function Header({onClick} : {onClick: () => void}) {
     const [click, setClick] = useState(false);
     return (
         <HeaderStyled
-            
             $isTouched={isTouched}
             onClick={() => {
                 setIsTouched(!isTouched)
